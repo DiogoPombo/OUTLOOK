@@ -7,7 +7,6 @@
 chcp 1252 > nul
 @title OUTLOOK
 
-color F1
 setlocal
 
 set "SPACE= "
@@ -49,19 +48,23 @@ if not errorlevel 1 (
     goto end
 )
 
-color F4
+color 0C
 if "%IDIOMA%"=="PT" (
+    set "MSGERROR=ERRO: Microsoft Outlook não foi encontrado ou está desabilitado neste Windows!"
     echo.
-    echo %SPACE%%SPACE%ERRO: Microsoft Outlook não foi encontrado ou está desabilitado neste Windows!
+    echo %SPACE%%SPACE%%MSGERROR%
     echo.
     echo %SPACE%%SPACE%Por favor, verifique a instalação do Outlook!
 ) else (
+    set "MSGERROR=ERROR: Microsoft Outlook was not found or is disabled on this Windows!"
     echo.
-    echo %SPACE%%SPACE%ERROR: Microsoft Outlook was not found or is disabled on this Windows!
+    echo %SPACE%%SPACE%%MSGERROR%
     echo.
     echo %SPACE%%SPACE%Please, check your Outlook installation!
 )
-timeout /t 5 /nobreak >nul
+powershell -Command "[System.Media.SystemSounds]::Exclamation.Play()"
+powershell -Command "Add-Type -AssemblyName PresentationFramework; [System.Windows.MessageBox]::Show('%MSGERROR%', 'OUTLOOK')"
+
 
 :end
 endlocal
